@@ -24,12 +24,19 @@ jobs:
   greet:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
+    
+    outputs:
+      outprint: ${{ steps.send.outputs.text }}
+      
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Runs a single command using the runners shell
     - name: Send greeting
-      run: echo "Hello ${{ inputs.name }}" >> $GITHUB_STEP_SUMMARY
+      id: send
+      run: |
+        echo "### Hello ${{ inputs.name }} :rocket:" >> $GITHUB_STEP_SUMMARY
+        echo "text=Hello ${{ inputs.name }}" >> $GITHUB_OUTPUT
+        echo "::notice Input was ${{ inputs.name }}"
 
   package:
     runs-on: ubuntu-latest
@@ -43,8 +50,14 @@ jobs:
 
       - name: list directory
         run: |
+          echo "::group::listDir"
+          echo "list github workspace folder"
           ls ${{ github.workspace }}
+          echo "::endgroup::"
 
+      - name: Print value from greet
+        run: echo "${{ needs.greet.outputs.outprint }}"
+        
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -53,5 +66,12 @@ jobs:
          # A file, directory or wildcard pattern that describes what to upload
          path: |
            ${{ github.workspace }}/*.md
-           #${{ github.workspace }}/CODEOWNERS
-          
+           # ${{ github.workspace }}/CODEOWNERS
+
+      - name: Generate list using Markdown
+        run: |
+          echo "This is the lead in sentence for the list" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
+          echo "- Lets add a bullet point" >> $GITHUB_STEP_SUMMARY
+          echo "- Lets add a second bullet point" >> $GITHUB_STEP_SUMMARY
+          echo "- How about a third one?" >> $GITHUB_STEP_SUMMARY          
