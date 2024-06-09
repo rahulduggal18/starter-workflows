@@ -1,3 +1,5 @@
+[![Manual workflow](https://github.com/rahulduggal18/starter-workflows/actions/workflows/manual.yml/badge.svg)](https://github.com/rahulduggal18/starter-workflows/actions/workflows/manual.yml)
+
 <p align="center">
   <img src="https://avatars0.githubusercontent.com/u/44036562?s=100&v=4"/> 
 </p>
